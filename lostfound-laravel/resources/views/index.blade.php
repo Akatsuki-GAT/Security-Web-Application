@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link rel="icon" href="https://public-frontend-cos.metadl.com/mgx/img/favicon.png" type="image/png">
+    <title>Lost&Found Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    <style>
+        /* Ensure consistent card heights */
+        .item-card {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .item-card .card-img-top {
+            height: 200px;
+            object-fit: cover;
+            background-color: #f8f9fa;
+        }
+        
+        /* Placeholder for items without images */
+        .item-card .placeholder-img {
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-size: 4rem;
+        }
+        
+        .item-card .card-body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .item-card .card-text {
+            flex: 1;
+        }
+        
+        /* Align navigation buttons */
+        .navbar .btn-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="index.html">
+                <i class="fas fa-search text-primary me-2 fs-4"></i>
+                <span class="fw-bold text-primary">Lost&Found Hub</span>
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showAllItems()">All Items</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="filterItems('lost')">Lost Items</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="filterItems('found')">Found Items</a>
+                    </li>
+                </ul>
+                
+                <!-- Auth buttons (shown when not logged in) -->
+                <!-- <div id="nav-auth" class="d-flex gap-2 ms-3 align-items-center"> -->
+                @guest
+                    <!-- Auth buttons (shown when NOT logged in) if user tried ex. localhost:8000/index it goes straight to Login-->
+                    <div class="d-flex gap-2 ms-3 align-items-center">
+                        <a href="{{ route('login') }}" class="btn btn-outline-primary">Login</a>
+                        <a href="{{ route('register') }}" class="btn btn-primary">Register</a>
+                    </div>
+                @endguest
+                
+                <!-- User menu (shown when logged in) -->
+                @auth
+    <!-- User menu (shown when logged in) -->
+    <div class="d-flex gap-2 ms-3 align-items-center">
+        <a href="{{ route('post-item') }}" class="btn btn-primary">
+            <i class="fas fa-plus me-1"></i>Post Item
+        </a>
+
+        <div class="dropdown">
+            <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                <i class="fas fa-user me-1"></i>
+                {{ Auth::user()->username }}
+            </button>
+
+            <ul class="dropdown-menu dropdown-menu-end">
+                <li>
+                    <a class="dropdown-item" href="">My Items</a>
+                </li>
+                <li><hr class="dropdown-divider"></li>
+                <li>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button class="dropdown-item">Logout</button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </div>
+     @if(auth()->user()->is_admin)
+        <a href="{{ route('admin.dashboard') }}">Admin Panel</a>
+    @endif
+    @endauth
+    </div>
+    </div>
+    </nav>
+    <!-- Hero Section -->
+    <section class="hero-section text-white text-center py-5" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+        <div class="container">
+            <h1 class="display-4 fw-bold mb-3">Lost Something? Found Something?</h1>
+            <p class="lead mb-4">Join our community to reunite lost items with their owners</p>
+            <div class="d-flex justify-content-center gap-3 flex-wrap">
+                <a href="{{ route('post-item') }}" class="btn btn-light btn-lg">
+                    <i class="fas fa-plus me-2"></i>Post an Item
+                </a>
+                <a href="#items-section" class="btn btn-outline-light btn-lg">
+                    <i class="fas fa-search me-2"></i>Browse Items
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Search and Filter Section -->
+    <section id="items-section" class="py-5">
+        <div class="container">
+            <div class="row mb-4">
+                <div class="col-md-6 mb-3 mb-md-0">
+                    <div class="input-group">
+                        <span class="input-group-text bg-white">
+                            <i class="fas fa-search"></i>
+                        </span>
+                        <input type="text" class="form-control" id="search-input" placeholder="Search items...">
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3 mb-md-0">
+                    <select class="form-select" id="category-filter" onchange="filterByCategory()">
+                        <option value="">All Categories</option>
+                        <option value="Electronics">Electronics</option>
+                        <option value="Bags">Bags & Backpacks</option>
+                        <option value="Jewelry">Jewelry & Accessories</option>
+                        <option value="Clothing">Clothing</option>
+                        <option value="Books">Books & Documents</option>
+                        <option value="Personal Items">Personal Items</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <div class="btn-group w-100" role="group">
+                        <button type="button" class="btn btn-outline-primary active" onclick="showAllItems()">All</button>
+                        <button type="button" class="btn btn-outline-danger" onclick="filterItems('lost')">Lost</button>
+                        <button type="button" class="btn btn-outline-success" onclick="filterItems('found')">Found</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Loading Indicator -->
+            <div id="loading" class="text-center py-5" style="display: none;">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+
+            <!-- Items Grid -->
+            <div id="items-grid" class="row g-4">
+                <!-- Items will be loaded here dynamically -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Item Details Modal -->
+    <div class="modal fade" id="item-modal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modal-title"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="modal-body">
+                    <!-- Item details will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Modal -->
+    <div class="modal fade" id="contact-modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Contact Poster</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="contact-form">
+                        <input type="hidden" id="contact-item-id">
+                        <div class="mb-3">
+                            <label for="contact-message" class="form-label">Message</label>
+                            <textarea class="form-control" id="contact-message" rows="4" required 
+                                placeholder="Describe why you're contacting about this item..."></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="contact-info" class="form-label">Your Contact Information</label>
+                            <input type="text" class="form-control" id="contact-info" required 
+                                placeholder="Email or phone number">
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+    window.currentUser = @json(auth()->user());
+</script>
+    <script src="{{ asset('js/script.js') }}"></script>
+    
+</body>
+</html>
