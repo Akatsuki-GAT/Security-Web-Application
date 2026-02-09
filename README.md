@@ -27,4 +27,4 @@ Features working and done(some parts) are: (Proofs are in Security Feats IMAGES)
 Areas that are in progress:
 - Patching some pages with protected routes which leds to:
 - Admin has its own POV . Both users and admin will share the same except some tweaks that only the admin can access with.
-- Login accepts email as of now it still inputs username
+- Login accepts email as of now it only accepts username
