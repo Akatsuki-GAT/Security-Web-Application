@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
+    //Existed user acc logs in
     public function signin(Request $request) {
     $incomingFields = $request->validate([
         'signinusername' => 'required',
@@ -22,19 +23,20 @@ class UserController extends Controller
         $request->session()->regenerate();
         //admin still not fully implemented. Just testing for protected route pages
         if (auth()->user()->role === 'admin') {
-        return redirect()->route('admin.dashboard');
+        //return redirect()->route('admin.dashboard');
     }
 
         return redirect()->route('index');
     }  
 
-    return back()->withErrors([
+    /*return back()->withErrors([
         'signinusername' => 'Invalid credentials.',
-    ])->withInput();
+    ])->withInput();*/
+
+    return back()->with('error', 'Wrong username or password. Please try again.'); 
 }
 
-
-
+    //User clicks logout
     public function logout(Request $request) {
         Auth::logout();
         $request->session()->invalidate();
@@ -42,6 +44,7 @@ class UserController extends Controller
         return redirect('/login');
     }
 
+    //Register new acc and hashing their password
     public function register(Request $request) {
         $incomingFields = $request->validate([
             'username' => 'required|min:6|max:255|unique:users,username', //input validations
@@ -52,7 +55,7 @@ class UserController extends Controller
             
         ]);
 
-        $incomingFields['password'] =bcrypt($incomingFields['password']); //this is the password hash
+        $incomingFields['password'] = bcrypt($incomingFields['password']); //this is the password hash
         $user = User::create($incomingFields);
         Auth::login($user); 
         

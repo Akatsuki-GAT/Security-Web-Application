@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="https://public-frontend-cos.metadl.com/mgx/img/favicon.png" type="image/png">
     <title>Login - Lost&Found Hub</title>
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    <link rel="stylesheet" href="<?php echo e(asset('css/style.css')); ?>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
@@ -21,7 +21,7 @@
             </div>
 
             <form action="/signin" id="login-form" class="auth-form" method="POST">
-                @csrf
+                <?php echo csrf_field(); ?>
                 <div class="form-group">
                     <label for="signin_username">Username or Email</label>
                     <div class="input-group">
@@ -45,17 +45,18 @@
                     <span class="btn-text">Sign In</span>
                     <i class="fas fa-spinner fa-spin btn-loading" style="display: none;"></i>
                 </button>
-                @if (session('error'))
+                <?php if(session('error')): ?>
                 <div class="form-message" id="form-message">
-                    {{ session ('error') }}
+                    <?php echo e(session ('error')); ?>
+
                 </div>
-                @endif
+                <?php endif; ?>
             </form>
             
             <!---->
             <div class="auth-footer">
-                <p>Don't have an account? <a href="{{ url('/register') }}">Sign up here</a></p>
-                <!--<p><a href="{{ url('/index') }}">← Back to Home</a></p>-->
+                <p>Don't have an account? <a href="<?php echo e(url('/register')); ?>">Sign up here</a></p>
+                <!--<p><a href="<?php echo e(url('/index')); ?>">← Back to Home</a></p>-->
             </div>
         </div>
     </div>
@@ -128,4 +129,4 @@
         }
     </script>
 </body>
-</html>
+</html><?php /**PATH C:\xampp\htdocs\lostfound-laravel\resources\views/login.blade.php ENDPATH**/ ?>

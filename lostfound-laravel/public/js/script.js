@@ -161,8 +161,9 @@ function createItemCard(item) {
     const typeClass = item.type === 'lost' ? 'danger' : 'success';
     const typeBadge = item.type === 'lost' ? 'Lost' : 'Found';
     const isOwner = currentUser && currentUser.id == item.user_id;
+    const isAdmin = currentUser && currentUser.is_admin;
     const isResolved = item.status === 'resolved';
-    
+    const canManage = (isOwner || isAdmin) && !isResolved;
     // Determine icon based on category
     const categoryIcons = {
         'Electronics': 'fa-laptop',
@@ -178,8 +179,8 @@ function createItemCard(item) {
     return `
         <div class="col-md-6 col-lg-4">
             <div class="card item-card shadow-sm hover-shadow" onclick="showItemDetails(${item.id})">
-                ${item.photo_url ? `
-                    <img src="/storage/${escapeHtml(item.photo_url)}">
+                ${item.image_path ? `
+                    <img src="/storage/${escapeHtml(item.image_path)}" alt="Item image"> <!--Added storage path for public side.-->
                 ` : `
                     <div class="placeholder-img">
                         <i class="fas ${icon}"></i>
@@ -197,7 +198,7 @@ function createItemCard(item) {
                         <small class="text-muted">${date}</small>
                     </div>
                     ${item.location ? `<div class="mt-2"><small class="text-muted"><i class="fas fa-map-marker-alt me-1"></i>${escapeHtml(item.location)}</small></div>` : ''}
-                    ${isOwner && !isResolved ? `
+                    ${canManage && !isResolved ? `
                         <div class="mt-3 d-flex gap-2" onclick="event.stopPropagation()">
                         
                             <a href="/items/${item.id}/edit"
@@ -214,6 +215,20 @@ function createItemCard(item) {
                             </button>
                         </div>
                     ` : ''}
+                    ${isAdmin && isResolved ? `
+                <div class="mt-3 d-flex align-items-center gap-2"
+                    onclick="event.stopPropagation()">
+
+                    <span class="small text-muted" style="visibility: hidden">
+                        DELETE USER'S RESOLVED POST
+                    </span>
+
+                    <button class="btn btn-sm btn-outline-danger ms-auto"
+                            onclick="deleteItem(${item.id})">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            ` : ''}
                 </div>
             </div>
         </div>
@@ -253,8 +268,8 @@ async function showItemDetails(itemId) {
 
     modalBody.innerHTML = `
         <div class="modal-item-details">
-            ${item.photo_url ? `
-                <img src="/storage/${escapeHtml(item.photo_url)}">
+            ${item.image_path ? `
+                 <img src="/storage/${escapeHtml(item.image_path)}" alt="Item image"> <!--Added storage path for public side.-->
 
             ` : `
                 <div class="placeholder-img rounded mb-3">

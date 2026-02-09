@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
     <link rel="icon" href="https://public-frontend-cos.metadl.com/mgx/img/favicon.png" type="image/png">
     <title>Lost&Found Hub</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    <link rel="stylesheet" href="<?php echo e(asset('css/style.css')); ?>">
     <style>
         /* Ensure consistent card heights */
         .item-card {
@@ -87,26 +87,27 @@
                 
                 <!-- Auth buttons (shown when not logged in) -->
                 <!-- <div id="nav-auth" class="d-flex gap-2 ms-3 align-items-center"> -->
-                @guest
+                <?php if(auth()->guard()->guest()): ?>
                     <!-- Auth buttons (shown when NOT logged in) if user tried ex. localhost:8000/index it goes straight to Login-->
                     <div class="d-flex gap-2 ms-3 align-items-center">
-                        <a href="{{ route('login') }}" class="btn btn-outline-primary">Login</a>
-                        <a href="{{ route('register') }}" class="btn btn-primary">Register</a>
+                        <a href="<?php echo e(route('login')); ?>" class="btn btn-outline-primary">Login</a>
+                        <a href="<?php echo e(route('register')); ?>" class="btn btn-primary">Register</a>
                     </div>
-                @endguest
+                <?php endif; ?>
                 
                 <!-- User menu (shown when logged in) -->
-                @auth
+                <?php if(auth()->guard()->check()): ?>
     <!-- User menu (shown when logged in) -->
     <div class="d-flex gap-2 ms-3 align-items-center">
-        <a href="{{ route('post-item') }}" class="btn btn-primary">
+        <a href="<?php echo e(route('post-item')); ?>" class="btn btn-primary">
             <i class="fas fa-plus me-1"></i>Post Item
         </a>
 
         <div class="dropdown">
             <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
                 <i class="fas fa-user me-1"></i>
-                {{ Auth::user()->username }}
+                <?php echo e(Auth::user()->username); ?>
+
             </button>
 
             <ul class="dropdown-menu dropdown-menu-end">
@@ -115,13 +116,13 @@
                 </li>
                 <li><hr class="dropdown-divider"></li>
                 <li>
-                 @if(auth()->user()->IsAdmin())
-                    <a class="dropdown-item" href="{{ route('admin.dashboard') }}">Admin Panel</a>
-                @endif
+                 <?php if(auth()->user()->IsAdmin()): ?>
+                    <a class="dropdown-item" href="<?php echo e(route('admin.dashboard')); ?>">Admin Panel</a>
+                <?php endif; ?>
                 </li>
                 <li>
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
+                    <form method="POST" action="<?php echo e(route('logout')); ?>">
+                        <?php echo csrf_field(); ?>
                         <button class="dropdown-item">Logout</button>
                     </form>
                 </li>
@@ -129,7 +130,7 @@
         </div>
     </div>
     
-    @endauth
+    <?php endif; ?>
     </div>
     </div>
     </nav>
@@ -139,7 +140,7 @@
             <h1 class="display-4 fw-bold mb-3">Lost Something? Found Something?</h1>
             <p class="lead mb-4">Join our community to reunite lost items with their owners</p>
             <div class="d-flex justify-content-center gap-3 flex-wrap">
-                <a href="{{ route('post-item') }}" class="btn btn-light btn-lg">
+                <a href="<?php echo e(route('post-item')); ?>" class="btn btn-light btn-lg">
                     <i class="fas fa-plus me-2"></i>Post an Item
                 </a>
                 <a href="#items-section" class="btn btn-outline-light btn-lg">
@@ -241,16 +242,14 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!--<script>
-    window.currentUser = @json(auth()->user());
+    window.currentUser = <?php echo json_encode(auth()->user(), 15, 512) ?>;
 </script>-->
 
 <script>
-    window.currentUser = @json(auth()->user() ? [
-        'id' => auth()->user()->id,
-        'is_admin' => auth()->user()->IsAdmin(),
-    ] : null);
+    window.currentUser = <?php echo json_encode(auth()->user() ? [
+        'id' => auth()->user()->id, 'is_admin' => auth()->user()->IsAdmin(), ] : null) ?>;
 </script>
-    <script src="{{ asset('js/script.js') }}"></script>
+    <script src="<?php echo e(asset('js/script.js')); ?>"></script>
     
 </body>
-</html>
+</html><?php /**PATH C:\xampp\htdocs\lostfound-laravel\resources\views/index.blade.php ENDPATH**/ ?>

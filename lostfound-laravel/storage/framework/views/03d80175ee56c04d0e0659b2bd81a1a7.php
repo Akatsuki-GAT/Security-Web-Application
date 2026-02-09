@@ -7,17 +7,17 @@
     <title>Post Item - Lost&Found Hub</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    <link rel="stylesheet" href="<?php echo e(asset('css/style.css')); ?>">
 </head>
 <body>
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
         <div class="container">
-            <a class="navbar-brand d-flex align-items-center" href="{{ route('index') }}">
+            <a class="navbar-brand d-flex align-items-center" href="<?php echo e(route('index')); ?>">
                 <i class="fas fa-search text-primary me-2 fs-4"></i>
                 <span class="fw-bold text-primary">Lost&Found Hub</span>
             </a>
-            <a href="{{ route('index') }}" class="btn btn-outline-primary">
+            <a href="<?php echo e(route('index')); ?>" class="btn btn-outline-primary">
                 <i class="fas fa-arrow-left me-2"></i>Back to Home
             </a>
         </div>
@@ -34,7 +34,7 @@
                         </div>
 
                         <form method="POST" action="/post-item" enctype="multipart/form-data">
-                            @csrf
+                            <?php echo csrf_field(); ?>
                             <div class="mb-4">
                                 <h5 class="mb-3">Item Type</h5>
                                 <div class="row g-3">
@@ -116,7 +116,7 @@
                             </div>
 
                             <div class="d-flex gap-2 justify-content-end">
-                                <button type="button" class="btn btn-secondary" onclick="window.location.href='{{ route('index') }}'">Cancel</button>
+                                <button type="button" class="btn btn-secondary" onclick="window.location.href='<?php echo e(route('index')); ?>'">Cancel</button>
                                 <button type="submit" class="btn btn-primary">
                                     <i class="fas fa-paper-plane me-2"></i>Post Item
                                 </button>
@@ -214,4 +214,4 @@
         
     </script>
 </body>
-</html>
+</html><?php /**PATH C:\xampp\htdocs\lostfound-laravel\resources\views/post-item.blade.php ENDPATH**/ ?>

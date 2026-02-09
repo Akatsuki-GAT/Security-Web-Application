@@ -12,7 +12,7 @@ Route::middleware('guest')->group(function () {
     Route::post('/signin', [UserController::class, 'signin'])->name('signin');
 });
 
-/* Auth once users in*/
+/* Auth once users in and completes either login or register form*/
 Route::middleware('auth')->group(function () {
     Route::get('/index', fn () => view('index'))->name('index');
     Route::post('/logout', [UserController::class, 'logout'])->name('logout');

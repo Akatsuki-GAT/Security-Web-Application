@@ -7,17 +7,17 @@
     <title>Edit Item - Lost&Found Hub</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    <link rel="stylesheet" href="<?php echo e(asset('css/style.css')); ?>">
 </head>
 <body>
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
         <div class="container">
-            <a class="navbar-brand d-flex align-items-center" href="{{ route('index') }}">
+            <a class="navbar-brand d-flex align-items-center" href="<?php echo e(route('index')); ?>">
                 <i class="fas fa-search text-primary me-2 fs-4"></i>
                 <span class="fw-bold text-primary">Lost&Found Hub</span>
             </a>
-            <a href="{{ route('index') }}" class="btn btn-outline-primary">
+            <a href="<?php echo e(route('index')); ?>" class="btn btn-outline-primary">
                 <i class="fas fa-arrow-left me-2"></i>Back to Home
             </a>
         </div>
@@ -33,23 +33,23 @@
                             <p class="text-muted">Update your item information</p>
                         </div>
 
-                        <form id="edit-form" method ="POST"  action="{{ route('items.update', $item) }}" enctype="multipart/form-data">
-                            @csrf
-                            @method('PATCH')
+                        <form id="edit-form" method ="POST"  action="<?php echo e(route('items.update', $item)); ?>" enctype="multipart/form-data">
+                            <?php echo csrf_field(); ?>
+                            <?php echo method_field('PATCH'); ?>
                             <div class="mb-4">
                                 <h5 class="mb-3">Item Details</h5>
                                 
                                 <div class="row g-3">
                                     <div class="col-md-6">
                                         <label for="title" class="form-label">Item Title *</label>
-                                        <input type="text" class="form-control" id="title" name="title" value="{{ old('title', $item->title) }}"
+                                        <input type="text" class="form-control" id="title" name="title" value="<?php echo e(old('title', $item->title)); ?>"
                                          required> <!--gets the original format of the users' post title-->
                                     </div>
                                     <div class="col-md-6">
                                         <label for="category" class="form-label">Category *</label>
                                         <select class="form-select" id="category" name="category" required>
                                             <option value="">Select a category</option>
-                                            <option value="Electronics" @selected($item->category === 'Electronics')>Electronics</option> <!--Default-->
+                                            <option value="Electronics" <?php if($item->category === 'Electronics'): echo 'selected'; endif; ?>>Electronics</option> <!--Default-->
                                             <option value="Bags">Bags & Backpacks</option>
                                             <option value="Jewelry">Jewelry & Accessories</option>
                                             <option value="Clothing">Clothing</option>
@@ -63,7 +63,8 @@
                                 <div class="mt-3">
                                     <label for="description" class="form-label">Description *</label>
                                     <textarea class="form-control" id="description" name="description" rows="4" required>
-                                        {{ old('description', $item->description) }}
+                                        <?php echo e(old('description', $item->description)); ?>
+
                                     </textarea>
                                 </div>  <!--Same like title but description-->
                             </div>
@@ -75,12 +76,12 @@
                                     <div class="col-md-6">
                                         <label for="location" class="form-label">Location</label>
                                         <input type="text" class="form-control" id="location" name="location" 
-                                        value="{{ old('title', $item->location) }}" required>
+                                        value="<?php echo e(old('title', $item->location)); ?>" required>
                                     </div>
                                     <div class="col-md-6">
                                         <label for="date_occurred" class="form-label">Date</label>
                                         <input type="date" class="form-control" id="date_occurred" name="date_occurred" 
-                                        value="{{ old('title', $item->date_occured) }}" required>
+                                        value="<?php echo e(old('title', $item->date_occured)); ?>" required>
                                     </div>
                                 </div>
                             </div>
@@ -102,7 +103,7 @@
                             </div>
 
                             <div class="d-flex gap-2 justify-content-end">
-                                <a href="{{ route('index') }}"><button type="button" class="btn btn-secondary">Cancel</button></a>
+                                <a href="<?php echo e(route('index')); ?>"><button type="button" class="btn btn-secondary">Cancel</button></a>
                                 <button type="submit" class="btn btn-primary">
                                     <i class="fas fa-save me-2"></i>Update Item
                                 </button>
@@ -141,4 +142,4 @@
         document.getElementById('date_occurred').max = new Date().toISOString().split('T')[0];
     </script>
 </body>
-</html>
+</html><?php /**PATH C:\xampp\htdocs\lostfound-laravel\resources\views/edit.blade.php ENDPATH**/ ?>

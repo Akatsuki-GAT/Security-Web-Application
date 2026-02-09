@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Intervention\Image\Facades\Image;
 use Illuminate\Http\Request;
 use App\Models\Item;
 use App\Models\Contact;
+use Illuminate\Support\Facades\Auth;
 
 class ItemController extends Controller
 {
@@ -22,12 +24,13 @@ class ItemController extends Controller
             'category' => 'required|string',
             'location' => 'nullable|string',
             'date_occurred' => 'nullable|date',
-            'image' => 'nullable|image|max:5120',
+            'image_path' => 'nullable|image|max:5120',
         ]);
 
-        if ($request->hasFile('image')) { //buggy as of now 
-            $validated['photo_url'] =
-                $request->file('image')->store('items', 'public');
+        if ($request->hasFile('image_path')) { //finds name = this key in the .blade.php
+            $validated['image_path'] =
+                $request->file('image_path')->store('items', 'public');
+                
         }
 
         $validated['user_id'] = auth()->id();
@@ -41,16 +44,24 @@ class ItemController extends Controller
 
     public function index()
 {
+    if (Auth::check() && Auth::user()->IsAdmin()) {
+        // Admin sees everything
+        $items = Item::latest()->get();
+    } 
+
+    else {
     $items = Item::with('user:id,username,full_name')
     ->where('status', '!=', 'resolved') // ← hides item that status value is resolved.
     ->latest()
     ->get();
+    }
     return response()->json($items);
 }
 
 public function destroy(Item $item) //delete
 {
-    abort_unless(auth()->id() === $item->user_id, 403);
+    //abort_unless(auth()->user()->IsAdmin(), 403);
+    abort_unless(auth()->id() || auth() -> user() ->IsAdmin() === $item->user_id, 403);
 
     $item->delete();
 
@@ -59,7 +70,8 @@ public function destroy(Item $item) //delete
 
 public function resolve(Item $item)//updates the status to resolve 
 {
-    abort_unless(auth()->id() === $item->user_id, 403);
+    //abort_unless(auth()->user()->IsAdmin(), 403);
+    abort_unless(auth()->id() === $item->user_id || auth() -> user() ->IsAdmin() , 403);
 
     $item->update(['status' => 'resolved']);
 
@@ -68,7 +80,7 @@ public function resolve(Item $item)//updates the status to resolve
 
 public function edit(Item $item)
 {
-    abort_unless(auth()->id() === $item->user_id, 403);
+    abort_unless(auth()->id() === $item->user_id || auth() -> user() ->IsAdmin() , 403);
 
     return view('edit', compact('item'));
 }
@@ -76,7 +88,7 @@ public function edit(Item $item)
 
 public function update(Request $request, Item $item) //when users decides to update his/her own post/s
 {
-    abort_unless(auth()->id() === $item->user_id, 403);
+    abort_unless(auth()->id() === $item->user_id || auth() -> user() ->IsAdmin() , 403);
 
     $validated = $request->validate([
         'title' => 'required|string|max:255',
@@ -84,13 +96,21 @@ public function update(Request $request, Item $item) //when users decides to upd
         'category' => 'required|string',
         'location' => 'nullable|string',
         'date_occurred' => 'nullable|date',
-        'image' => 'nullable|image|max:5120',
+        'image_path' => 'nullable|image|max:5120',
     ]);
 
-    if ($request->hasFile('image')) { //again still buggy on this part
-        $validated['photo_url'] =
-            $request->file('image')->store('items', 'public');
+    if ($request->hasFile('image_path')) {
+    //Handle old image if user has an image
+    if ($item->image_path && \Storage::disk('public')->exists($item->image_path)) {
+            \Storage::disk('public')->delete($item->image_path);
     }
+    //Use this existing as image or new image if the uploader decides to replace it and replace the old code below as it won'r work
+    // Store new image
+    $validated['image_path'] =
+    $request->file('image_path')->store('items', 'public');
+    //$path = $request->file('image_path')->store('items', 'public');
+    //$validated['image_path'] = $path;
+}
 
     $item->update($validated);
 
