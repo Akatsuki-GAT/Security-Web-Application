@@ -43,7 +43,7 @@ Areas that are in progress:
 1. Unauthenticated Users (Guests)
 + A guest is any visitor who is not logged in:
 - The application does not rely on Blade’s @guest directive which I used for a brief time but decided to go the routing level route which
-- Acts as aaccess control is enforced at the routing level in web.php
+- Acts as an access control is enforced at the routing level in web.php
 - Any unauthenticated user attempting to access protected routes (/index) is automatically redirected to the login page if they don't have an account they can register as well.
 
 Identification method:
