@@ -7,7 +7,7 @@ The only feature working as of now is the password strength meter is Enzoic, a c
 + Scores strength (weak / medium / strong)
 
 What needs to be done is to:
-- Making the next page after login or regsiter doesn't get accessed by URL 
+- Making the next page after login or register doesn't get accessed by URL 
 - Adding a demo database for CRUD and update some lines of code to make it Laravel built code
 - Deciding whether to add and then finalize Admin route pages route or not as this one was originally users only
 - Going back to demo database making sure it is translated to Laravel readablity from its old PHP functions and structure
