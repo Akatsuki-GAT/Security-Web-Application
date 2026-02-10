@@ -29,7 +29,7 @@ Areas that are in progress:
 - Admin has its own POV . Both users and admin will share the same except some tweaks that only the admin can manipulate with.
 - Login accepts email as of now it only accepts username
 
-#SETUP and RUN
+# SETUP and RUN
 - Creating a proj make sure it's in a designated folder you want it to be and is empty for example of mine- C/xampp/htdocs/Project_Name in VSC
 - Then type in VSC terminal (Ctrl + J) 'composer create project laravel/laravel . 'and hit enter to install it on a current file directory stated above
 - Once it's done on same VSC terminal type 'php artisan serve' and hit enter and do quicktest typing on your browser 'localhost:8000' which sends you a sample Laravel Page
@@ -38,7 +38,7 @@ Areas that are in progress:
 - If database is now involved make sure mySQL and Apache(for reading if the actual DB function works) is running in XAMPP or any programs that functions like XAMPP.
   
 
-#HOW DO WE IDENTIFY WHO's WHO? (Users that are(n't) login, Admin)
+# HOW DO WE IDENTIFY WHO's WHO? (Users that are(n't) login, Admin)
 
 1. Unauthenticated Users (Guests)
 + A guest is any visitor who is not logged in:
