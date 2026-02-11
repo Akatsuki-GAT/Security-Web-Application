@@ -30,7 +30,7 @@
                         <label for="username">Username</label>
                         <div class="input-group">
                             <i class="fas fa-user"></i>
-                            <input name="username" type="text" placeholder="Username">
+                            <input name="username" type="text" placeholder="Username" required>
                         </div>
                     </div>
 
@@ -38,7 +38,7 @@
                         <label for="email">Email</label>
                         <div class="input-group">
                             <i class="fas fa-envelope"></i>
-                            <input name="email" type="email" placeholder="Email">
+                            <input name="email" type="email" placeholder="Email" required>
                         </div>
                     </div>
                 </div>
@@ -47,7 +47,7 @@
                     <label for="full_name">Full Name</label>
                     <div class="input-group">
                         <i class="fas fa-id-card"></i>
-                        <input name="full_name" type="text" placeholder="Jane Doe">
+                        <input name="full_name" type="text" placeholder="Jane Doe" patern="[A-Za-z]" required>
                     </div>
                 </div>
 
@@ -55,7 +55,7 @@
                     <label for="phone">Phone Number (Optional)</label>
                     <div class="input-group">
                         <i class="fas fa-phone"></i>
-                        <input name="contact" type="tel" placeholder="Contact No.">
+                        <input name="contact" type="tel" placeholder="Contact No." pattern="^[0-9+#]+$">
                     </div>
                 </div>
 
@@ -77,6 +77,9 @@
                                 enz-css-fail-class="enz-fail"
 
                             />
+                            <button type="button" class="password-toggle" onclick="togglePassword('password')">
+                            <i class="fas fa-eye"></i>
+                        </button>
 <!--This is where Enzoic is used...-->
                             
                         </div>
@@ -103,13 +106,13 @@
 
 <script>
      if (
-                typeof Enzoic === 'undefined' ||
-                typeof Enzoic.currentPasswordScore === 'undefined'
-            ) {
-                messageDiv.textContent = 'Password strength service unavailable.';
-                messageDiv.className = 'form-message error';
-                return;
-            }
+            typeof Enzoic === 'undefined' ||
+            typeof Enzoic.currentPasswordScore === 'undefined'
+        ) {
+            messageDiv.textContent = 'Password strength service unavailable.';
+            messageDiv.className = 'form-message error';
+            return;
+        }
 
             // Enzoic password strength check
             if (Enzoic.currentPasswordScore < Enzoic.PASSWORD_STRENGTH.Strong) {
@@ -118,7 +121,20 @@
                 return;
             }
 
-   
+   function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            const icon = input.parentElement.querySelector('.password-toggle i');
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
     
 
 

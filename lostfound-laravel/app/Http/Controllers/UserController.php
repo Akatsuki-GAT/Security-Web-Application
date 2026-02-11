@@ -12,27 +12,28 @@ class UserController extends Controller
     //Existed user acc logs in
     public function signin(Request $request) {
     $incomingFields = $request->validate([
-        'signinusername' => 'required',
-        'signpassword' => 'required'
+        'login' => 'required|string',
+        'signinpassword' => 'required|string'
     ]);
 
+    $loginType = filter_var($incomingFields['login'], FILTER_VALIDATE_EMAIL)
+        ? 'email'
+        : 'username'; //logins either username or email...
+
     if (Auth::attempt([
-        'username' => $incomingFields['signinusername'],
-        'password' => $incomingFields['signpassword']
+        $loginType => $incomingFields['login'],
+        'password' => $incomingFields['signinpassword']
     ])) {
         $request->session()->regenerate();
-        //admin still not fully implemented. Just testing for protected route pages
+        //if role is admin 
         if (auth()->user()->role === 'admin') {
-        //return redirect()->route('admin.dashboard');
+        
     }
 
         return redirect()->route('index');
     }  
 
-    /*return back()->withErrors([
-        'signinusername' => 'Invalid credentials.',
-    ])->withInput();*/
-
+    
     return back()->with('error', 'Wrong username or password. Please try again.'); 
 }
 
@@ -62,5 +63,6 @@ class UserController extends Controller
         return redirect()->route('index');
        /* return redirect('/');*/
     }
+    
 }
 

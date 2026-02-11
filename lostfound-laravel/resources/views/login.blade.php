@@ -26,7 +26,7 @@
                     <label for="signin_username">Username or Email</label>
                     <div class="input-group">
                         <i class="fas fa-user"></i>
-                        <input type="text" id="username" name="signinusername" required>
+                        <input type="text" id="username" name="login" required>
                     </div>
                 </div>
 
@@ -34,7 +34,7 @@
                     <label for="signin_password">Password</label>
                     <div class="input-group">
                         <i class="fas fa-lock"></i>
-                        <input type="password" id="password" name="signpassword" required>
+                        <input type="password" id="password" name="signinpassword" required>
                         <button type="button" class="password-toggle" onclick="togglePassword('password')">
                             <i class="fas fa-eye"></i>
                         </button>

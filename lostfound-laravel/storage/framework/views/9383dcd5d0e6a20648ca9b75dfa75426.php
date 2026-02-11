@@ -86,7 +86,8 @@
                 </ul>
                 
                 <!-- Auth buttons (shown when not logged in) -->
-                <!-- <div id="nav-auth" class="d-flex gap-2 ms-3 align-items-center"> -->
+                <!-- Ehh this'll be ditched for now as I'll let the index be the protected route
+                 however I'll be using this is a reference in the future-->
                 <?php if(auth()->guard()->guest()): ?>
                     <!-- Auth buttons (shown when NOT logged in) if user tried ex. localhost:8000/index it goes straight to Login-->
                     <div class="d-flex gap-2 ms-3 align-items-center">
