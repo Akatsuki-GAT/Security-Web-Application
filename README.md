@@ -17,12 +17,12 @@ Composer, mySQL and PHP(XAMPP takes care the two of em) as I don't know if my ot
 
 The register, login, and localrun is on IAS folder which contain images of it.
 
-# Security-Web-Application 4/29/2026
+# Security-Web-Application(not so perfect) 4/29/2026
 
 Features working and done(some parts) are: (Proofs are in Security Feats IMAGES)
 - Password hashing using bcrypt in Laravel framework
 - Protected routes implemented with bit of role based access- guest and auth (As of now it restricts index.blade.php if user is guest or hasn't logged in or created)
-  though some small parts in .blade.php still needs tinkering to work and debug. (SOLVED)
+  though some small parts in .blade.php still needs tinkering to work and debug. (SOLVED SOME PARTS)
 
 Areas that are in progress(ALREADY SOLVED SLIGHT):
 - Patching some pages with protected routes which leds to:
