@@ -38,7 +38,7 @@ Areas that are in progress(ALREADY SOLVED SLIGHT):
 - If database is now involved make sure mySQL and Apache(for reading if the actual DB function works) is running in XAMPP or any programs that functions like XAMPP.
   
 
-# HOW DO WE IDENTIFY WHO's WHO? (Users that are(n't) login, Admin)
+# HOW DO WE IDENTIFY WHO's WHO? (Users that are(n't) login users or Admin)
 
 1. Unauthenticated Users (Guests)
 + A guest is any visitor who is not logged in:
