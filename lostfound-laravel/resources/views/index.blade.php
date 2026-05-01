@@ -9,6 +9,17 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    <script type="text/javascript"
+        src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js">
+    </script>
+    <script type="text/javascript">
+    (function(){
+        emailjs.init({
+            publicKey: "fNNL1mAZBb9IYnLZr",
+        });
+    })();
+    </script>
+    <script src="{{ asset('js/email.js') }}"></script>
     <style>
         /* Ensure consistent card heights */
         .item-card {
@@ -106,7 +117,7 @@
 
         <div class="dropdown">
             <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                <i class="fas fa-user me-1"></i>
+                <i class="fas fa-user me-1" name="username"></i>
                 {{ Auth::user()->username }}
             </button>
 
@@ -224,6 +235,7 @@
                     <form id="contact-form">
                         <input type="hidden" id="contact-item-id">
                         <div class="mb-3">
+                            <input type="hidden" id="username" value="{{ auth()->user()->username }}">
                             <label for="contact-message" class="form-label">Message</label>
                             <textarea class="form-control" id="contact-message" rows="4" required 
                                 placeholder="Describe why you're contacting about this item..."></textarea>
@@ -233,7 +245,7 @@
                             <input type="text" class="form-control" id="contact-info" required 
                                 placeholder="Email or phone number">
                         </div>
-                        <button type="submit" class="btn btn-primary w-100">Send Message</button>
+                        <button type="button" onclick="sendMail()" class="btn btn-primary w-100">Send Message</button>
                     </form>
                 </div>
             </div>
